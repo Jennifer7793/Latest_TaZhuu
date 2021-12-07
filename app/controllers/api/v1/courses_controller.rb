@@ -1,0 +1,27 @@
+class Api::V1::CoursesController < ApplicationController
+  # skip_before_action :verify_authenticity_token
+  before_action :check_login
+
+  def like
+    course = Course.find(params[:id])
+
+    favorited_course = FavCourse.find_by(user: current_user, course: course)
+    if favorited_course
+      favorited_course.destroy
+      render json: { result: 'unlike' }
+    else
+      current_user.favorite_courses << course
+      render json: { result: 'like'}
+    end
+  end
+
+  private
+  def check_login
+    if not user_signed_in?
+      render json: { status: 'fail', message: 'Nd to log in first'},
+      status: 401
+      return
+    end
+  end
+end
+

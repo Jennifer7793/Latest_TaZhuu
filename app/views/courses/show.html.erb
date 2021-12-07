@@ -1,0 +1,39 @@
+<h1 data-controller="fav"
+    data-fav-liked-value="<% user_signed_in? && current_user.favorite_courses.include?(@course) %>"
+    data-fav-course-id-value="<%= @course.id %>"
+>
+  <%= @course.name %>
+    <button data-fav-target="btn" 
+            data-action="fav#like"
+            >Like!
+    </button> 
+</h1>
+
+<%= link_to '購買課程', buy_course_path(@course) %>
+
+<%= link_to '返回課程列表', courses_path %>
+
+<%= form_for(@review, url: course_reviews_path(@course), remote: true) do |form| %>
+
+<div class="fields">
+  <%= form.label :rating %>
+  <%= form.select :rating, [1, 2, 3, 4, 5], include_blank: true %>
+</div>
+
+<div class="fields">
+  <%= form.label :title %>
+  <%= form.text_field :title %>
+</div>
+
+<div class="fields">
+  <%= form.label :content %>
+  <%= form.text_area :content %>
+</div>
+
+<%= form.submit '送出' %>
+<% end %>
+
+<h2>評論</h2>
+<div class="review-container">
+  <%= render @reviews %>
+</div>
