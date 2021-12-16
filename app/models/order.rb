@@ -6,9 +6,9 @@ class Order < ApplicationRecord
 
   include AASM
 
-  aasm: 'status' do #default column: aasm_state
-    status :pending, initial: true
-    status :paid, :cancelled, :refunded
+  aasm column: 'status' do #default column: aasm_state
+    state :pending, initial: true
+    state :paid, :cancelled, :refunded
 
     event :pay do
       transitions from: :pending, to: :paid
@@ -34,7 +34,7 @@ class Order < ApplicationRecord
   end
 
   def code_generator(n = 7)
-    all_chars = [*'A'..'Z']
+    all_chars = [*'A'..'Z', *'0'..'9']
     confused_chars = ['X', 'S', '0', 'O', 'B', 'P', 'M', 'N', 'D', 'T']
 
     (all_chars - confused_chars).sample(n).join

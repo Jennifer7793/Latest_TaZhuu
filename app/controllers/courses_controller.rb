@@ -3,7 +3,7 @@ class CoursesController < ApplicationController
   before_action :authenticate!, except: [:index, :show]
 
   def index
-    @courses = Course.all
+    @courses = Course.all.includes(:user)
   end
 
   def show
@@ -19,14 +19,7 @@ class CoursesController < ApplicationController
   def buy
     @course = Course.find(params[:id])
     @order = Order.new
-
-    gateway = Braintree::Gateway.new(
-      environment: :sandbox,
-      merchant_id: ENV['h8jcptc4t6htzcd5'],
-      public_key: ENV['556smdxth5jmr7n5'],
-      private_key: ENV['22e781fa3cbddd88134c8e561ae49f85']
-    )
-    @token = gateway.client_token.generate
+    @token = Braintree::TokenGenerator.call
   end
   
   def create

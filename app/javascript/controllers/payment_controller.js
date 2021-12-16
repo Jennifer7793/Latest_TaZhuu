@@ -19,11 +19,15 @@ export default class extends Controller {
         form.addEventListener("submit", (e) => {
           e.preventDefault()
 
-          instance.requestPaymentMethod()
-                  .then(({nonce}) => {
-                     this.nonceTarget.value = nonce
-          form.submit()
-          })
+          instance
+            .requestPaymentMethod()
+            .then(({ nonce }) => {
+              this.nonceTarget.value = nonce
+              form.submit()
+            })
+            .catch((err) => {
+              console.log("ERROR: ", err);
+            })
         })
       })
       .catch((err) => {
